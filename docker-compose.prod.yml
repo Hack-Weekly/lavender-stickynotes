@@ -1,0 +1,70 @@
+version: "3.8"
+
+volumes:
+    app_data:
+        name: sn_app_data
+    static_files:
+        name: sn_static_files
+    media_files:
+        name: sn_media_files
+    certbot_web:
+        name: sn_certbot_web
+    certbot_certs:
+        name: sn_certbot_certs
+
+services:
+    django:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: sn:production
+        container_name: sn_django_production
+        command: /app/docker/start.sh server
+        depends_on:
+            - postgres
+        env_file:
+            - .env
+        ports:
+            - 8000:8000
+        volumes:
+            - static_files:/app/static
+            - media_files:/app/media
+
+    postgres:
+        image: postgres:13.3-alpine
+        hostname: sn-postgres
+        volumes:
+            - app_data:/var/lib/postgresql/data
+        env_file:
+            - .env
+    
+    
+    nginx:
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        image: nginx:development
+        ports:
+            - 80:80
+            - 443:443
+        depends_on:
+            - django
+        volumes:
+            - static_files:/app/static:ro
+            - media_files:/app/media:ro
+            - certbot_web:/vol/www:ro
+            - certbot_certs:/etc/letsencrypt/:ro
+        env_file:
+            - .env
+
+    certbot:
+            build:
+              context: ./certbot
+            command: certbot certonly --webroot --webroot-path "/vol/www/" -d "$DOMAIN" --email $EMAIL --rsa-key-size 4096 --agree-tos --noninteractive
+            depends_on:
+              - nginx
+            env_file:
+              - .env
+            volumes:
+              - certbot_web:/vol/www:rw
+              - certbot_certs:/etc/letsencrypt/:rw
