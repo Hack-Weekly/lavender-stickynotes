@@ -32,6 +32,7 @@ done
 
 python3 manage.py collectstatic --noinput
 python3 manage.py makemigrations
-python3 manage.py migrate
+python3 manage.py migrate api
+python manage.py migrate
 #python3 manage.py loaddata db.json
 exec "$@"
