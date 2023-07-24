@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+#import slugify
+from django.utils.text import slugify
+
 class User(AbstractUser):
       '''
       Basic User model with email as username
@@ -21,9 +24,15 @@ class Team(models.Model):
     description = models.TextField()
     members = models.ManyToManyField(User, related_name='team_members')
     created_at = models.DateTimeField(auto_now_add=True)
+    slug=models.SlugField(max_length=100,unique=True)
 
     def __str__(self):
         return self.name
+    
+    def save(self,*args,**kwargs):
+        if not self.slug:
+            self.slug=self.name.replace(' ','-').lower()
+        super(Team,self).save(*args,**kwargs)
     
 
 class Project(models.Model):
@@ -41,14 +50,20 @@ class Project(models.Model):
     tasks = models.ManyToManyField('Task',related_name='project_tasks',blank=True)
     notes=models.ManyToManyField('Note',related_name='project_notes',blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    slug=models.SlugField(max_length=100,unique=True)
+    
     def __str__(self):
         return self.name
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug=slugify(self.name)
+        super(Project, self).save(*args, **kwargs)
+
 
 class Task(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.CharField(max_length=500)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='task_project')
     group=models.ForeignKey('Group',on_delete=models.CASCADE,related_name='task_group',null=True,blank=True)
     objectives=models.ManyToManyField('Objectives',related_name='task_objectives',blank=True)
@@ -71,7 +86,7 @@ class Note(models.Model):
 class Group(models.Model):
     '''
     Will be used to group Notes and Tasks
-    for ecample: Progress, Backlog, Completed or any other group user wish to name.
+    for example: Progress, Backlog, Completed or any other group user wish to name.
     strucutre:
     Team-
         Project-
@@ -79,6 +94,7 @@ class Group(models.Model):
     '''
     name = models.CharField(max_length=100)
     project=models.ForeignKey(Project,on_delete=models.CASCADE,related_name='group_project')
+    
     def __str__(self):
         return self.name
     

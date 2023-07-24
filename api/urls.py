@@ -16,5 +16,10 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='auth_register'),
     path('test/', views.testEndPoint, name='test'),
     path('docs/', views.DocsView.as_view(), name='docs'),
+    path('teams/', views.TeamCreateAndListAPIView.as_view(), name='teams'),
+    #path('team/<slug:slug>/', views.TeamCreateAndListAPIView, name='teams'),
+    #path('team/<slug:slug>/projects/', views.ProjectCreateAndListAPIView, name='projects'),
+    path('projects/', views.ProjectCreateAndListAPIView.as_view(), name='projects'),
+    #path to get project detail
     path('', views.getRoutes,name='routes')
 ]

@@ -6,6 +6,7 @@ from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 #project serializers
+from .models import Team, Project
 
 
 User=get_user_model()
@@ -58,3 +59,30 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+class TeamCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ['id', 'name', 'description', 'owner', 'members', 'created_at']
+        read_only_fields = ['id', 'owner', 'created_at']
+
+#This serializer will be used for Serializing "FOR GET QUERY" data only.
+class TeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ['name', 'description', 'owner', 'members', 'created_at']
+        read_only_fields = ['owner', 'created_at']
+
+#This serializer will be used for Serializing "FOR GET QUERY" data only.
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'description', 'team', 'tasks', 'notes', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+   
+    team = TeamSerializer()
+
+    #the list of task and note IDs instead of nested serializers
+    tasks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    notes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
