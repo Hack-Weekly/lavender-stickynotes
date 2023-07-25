@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 
 app_name = 'api'
-app_version='v1.0.0'
+app_version='v1.5.0'
 
 
 urlpatterns = [

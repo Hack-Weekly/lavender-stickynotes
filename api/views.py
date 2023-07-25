@@ -105,7 +105,6 @@ class TeamCreateAndListAPIView(APIView):
 class ProjectCreateAndListAPIView(APIView):
     '''
     This class can be accessed with anyone with member level permission.
-
     '''
     def get (self,request,format=None):
         project_own=Project.objects.filter(team__owner=request.user)

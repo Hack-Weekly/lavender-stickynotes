@@ -6,7 +6,7 @@ from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 #project serializers
-from .models import Team, Project
+from .models import Team, Project, Task, Note,Objectives
 
 
 User=get_user_model()
@@ -63,15 +63,15 @@ class RegisterSerializer(serializers.ModelSerializer):
 class TeamCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
-        fields = ['id', 'name', 'description', 'owner', 'members', 'created_at']
+        fields = ['name', 'description', 'owner', 'created_at']
         read_only_fields = ['id', 'owner', 'created_at']
 
 #This serializer will be used for Serializing "FOR GET QUERY" data only.
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
-        fields = ['name', 'description', 'owner', 'members', 'created_at']
-        read_only_fields = ['owner', 'created_at']
+        fields = ['id', 'name', 'description', 'owner', 'members', 'created_at']
+        read_only_fields = ['id', 'owner', 'created_at']
 
 #This serializer will be used for Serializing "FOR GET QUERY" data only.
 class ProjectSerializer(serializers.ModelSerializer):
@@ -80,9 +80,36 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'team', 'tasks', 'notes', 'created_at']
         read_only_fields = ['id', 'created_at']
 
-   
-    team = TeamSerializer()
 
-    #the list of task and note IDs instead of nested serializers
-    tasks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    notes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+class ProjectCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['name', 'description', 'team']
+        read_only_fields = ['id','team', 'created_at']
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['id', 'name', 'description', 'project', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+    project = ProjectSerializer()
+
+class TaskCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['name', 'description', 'project']
+        read_only_fields = ['id', 'created_at']
+
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = ['id', 'name', 'description', 'project', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class NoteCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = ['name', 'description', 'project']
+        read_only_fields = ['id', 'created_at']
