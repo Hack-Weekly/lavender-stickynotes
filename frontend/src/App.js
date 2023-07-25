@@ -6,15 +6,15 @@ import { isAuth } from "./services/utils/isAuth";
 import { logout } from "./services/endpoints/users";
 export default function App() {
   const location = useLocation();
-  const [authenticated, setAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(()=>{
     const checkAuth = async() => {
       try{
-      setAuthenticated(await isAuth());
+      setIsAuthenticated(await isAuth());
       }catch(error){
         console.error(error);
-        setAuthenticated(false);
+        setIsAuthenticated(false);
       }
     }
   checkAuth();
@@ -23,8 +23,8 @@ export default function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<FormPage isLogin = {true} />} />
+        <Route path="/" element={<Home isAuthenticated={isAuthenticated} />} />
+        <Route path="/login" element={<FormPage isLogin={true} />} />
         <Route path="/signup" element={<FormPage isLogin={false} />} />
       </Routes>
     </>
