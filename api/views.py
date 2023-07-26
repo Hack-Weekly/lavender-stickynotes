@@ -51,6 +51,10 @@ def getRoutes(request):
         '/api/register/',
         '/api/token/refresh/',
         '/api/test/',
+        '/api/docs/',
+        '/api/teams/',
+        '/api/projects/',
+        '/api/profile/',
     ]
     # for urls in urlpatterns:
     #     routes.append(urls.pattern._route)
@@ -81,9 +85,14 @@ def testEndPoint(request):
 class TeamCreateAndListAPIView(APIView):
     '''
     Get query can only be allowed to user with member or owner level permission.
-    Psot can be done by anyone.
+    Post can be done by anyone.
     '''
+    permission_classes = []
+
     def get(self,request,format=None):
+        
+        permission_classes = [IsAuthenticated]
+        
         team_own=Team.objects.filter(owner=request.user)
         team_member=Team.objects.filter(members=request.user)
 
@@ -190,3 +199,26 @@ class ProjectDetailView(APIView):
         project = self.get_object(slug=slug)
         project.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class UserProfileAPIView(APIView):
+    '''
+    This class will return the user profile detail and teams owned by user.
+    User can update the profile(change username or email).
+    '''
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request,format=None):
+
+        team_own=Team.objects.filter(owner=request.user)
+        serializer_own=TeamSerializer(team_own,many=True)
+        return Response(serializer_own.data,status=status.HTTP_200_OK)
+        
+    
+    def put(self,request,format=None):
+        # user=request.user
+        # serializer=RegisterSerializer(user,data=request.data)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

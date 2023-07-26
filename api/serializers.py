@@ -4,7 +4,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
+from rest_framework.exceptions import ValidationError
 #project serializers
 from .models import Team, Project, Task, Note,Objectives
 
@@ -60,11 +60,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
 
-class TeamCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Team
-        fields = ['name', 'description', 'owner', 'created_at']
-        read_only_fields = ['id', 'owner', 'created_at']
+
 
 #This serializer will be used for Serializing "FOR GET QUERY" data only.
 class TeamSerializer(serializers.ModelSerializer):
@@ -73,6 +69,8 @@ class TeamSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'owner', 'members', 'created_at']
         read_only_fields = ['id', 'owner', 'created_at']
 
+    
+
 #This serializer will be used for Serializing "FOR GET QUERY" data only.
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,12 +78,19 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'team', 'tasks', 'notes', 'created_at']
         read_only_fields = ['id', 'created_at']
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['id']['created_at'] = None
+        return data
+    
+    def create(self,validated_data):
+        team_data = validated_data.pop('team')
+        try:
+            validated_data['team']= Team.objects.get(**team_data)
+        except Team.DoesNotExist:
+            raise ValidationError("Specified team does not exist.")
+        return super().create(validated_data)
 
-class ProjectCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = ['name', 'description', 'team']
-        read_only_fields = ['id','team', 'created_at']
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
@@ -93,13 +98,7 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'project', 'created_at']
         read_only_fields = ['id', 'created_at']
 
-    project = ProjectSerializer()
-
-class TaskCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Task
-        fields = ['name', 'description', 'project']
-        read_only_fields = ['id', 'created_at']
+ 
 
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -107,9 +106,17 @@ class NoteSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'project', 'created_at']
         read_only_fields = ['id', 'created_at']
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['id']['created_at'] = None
+        return data
 
-class NoteCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Note
-        fields = ['name', 'description', 'project']
-        read_only_fields = ['id', 'created_at']
+    def create(self,validated_data):
+        project_data = validated_data.pop('project')
+        try:
+            validated_data['project']= Project.objects.get(**project_data)
+        except Project.DoesNotExist:
+            raise ValidationError("Specified project does not exist.")
+        return super().create(validated_data)
+
+
