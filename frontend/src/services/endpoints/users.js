@@ -33,3 +33,9 @@ export const getRefreshToken = async (refreshToken) => {
   const data = JSON.stringify({ refresh: refreshToken });
   return post(route, data);
 };
+
+export const getProfile = async () => {
+    const route = "/profile/";
+    return get(route);
+}
+
