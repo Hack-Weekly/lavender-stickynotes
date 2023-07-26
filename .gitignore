@@ -87,4 +87,9 @@ local_settings.py
 
 .env
 db.sqlite3
+#client for API
 client.py
+
+### react ###
+node_modules
+
