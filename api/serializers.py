@@ -7,7 +7,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 #project serializers
 from .models import Team, Project
-
+from .models import Task,Note,Group,Objectives
 
 User=get_user_model()
 
@@ -16,9 +16,6 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username','email']
-
-
-
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -86,3 +83,38 @@ class ProjectSerializer(serializers.ModelSerializer):
     #the list of task and note IDs instead of nested serializers
     tasks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     notes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Group
+        fields=['name','project']
+
+class TaskSerializer(serializers.ModelSerializer):
+    projects=ProjectSerializer(many=True,read_only=True)
+    groups=GroupSerializer(many=True,read_only=True)
+    #objectives=ObjectivesSerializer(many=True,source='objectivesserializers',read_only=True)
+    class Meta:
+        model=Task
+        fields=['name','project','group','description']
+        read_only_fields=['created_at']
+
+class ObjectivesSerializer(serializers.ModelSerializer):
+    tasks=TaskSerializer(many=True,read_only=True)
+    class Meta:
+        model=Objectives
+        fields=['name','completed','task']
+        read_only_fields=['created_at']
+
+class NoteSerializer(serializers.ModelSerializer):
+    projects=ProjectSerializer(many=True,read_only=True)
+    group=GroupSerializer(many=True,read_only=True)
+    class Meta:
+        model=Note
+        fields=['name','project','group','description']
+        read_only_fields=['created_at']
+
+
+
+
+        
