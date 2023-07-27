@@ -64,32 +64,35 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 #This serializer will be used for Serializing "FOR GET QUERY" data only.
 class TeamSerializer(serializers.ModelSerializer):
+    owner = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
     class Meta:
         model = Team
-        fields = ['id', 'name', 'description', 'owner', 'members', 'created_at']
+        fields = ['id', 'name', 'description','owner', 'members', 'created_at']
         read_only_fields = ['id', 'owner', 'created_at']
 
+    def update(self, instance, validated_data):
+        #for some reason owner is required here even when 
+        # updating owner isn't allowed or is read only.
+        # Prevent updating the owner during update.
+        validated_data.pop('owner', None)
+        return super().update(instance, validated_data)
     
 
 #This serializer will be used for Serializing "FOR GET QUERY" data only.
 class ProjectSerializer(serializers.ModelSerializer):
+    team = serializers.SlugRelatedField(slug_field='slug', queryset=Team.objects.all())
     class Meta:
         model = Project
         fields = ['id', 'name', 'description', 'team', 'tasks', 'notes', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        read_only_fields = ['id', 'created_at','tasks','notes'] #tasks and notes are read only fields for project
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['id']['created_at'] = None
-        return data
-    
-    def create(self,validated_data):
-        team_data = validated_data.pop('team')
-        try:
-            validated_data['team']= Team.objects.get(**team_data)
-        except Team.DoesNotExist:
-            raise ValidationError("Specified team does not exist.")
-        return super().create(validated_data)
+
+class ProjectOperationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'description', 'team', 'tasks', 'notes', 'created_at']
+        read_only_fields = ['id', 'created_at','team','tasks','notes'] #tasks and notes are read only fields for project
+
 
 
 class TaskSerializer(serializers.ModelSerializer):
