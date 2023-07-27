@@ -4,15 +4,14 @@ import { FormPage } from "./pages/FormPage";
 import { useEffect, useState } from "react";
 import { isAuth } from "./services/utils/isAuth";
 import { getProfile } from "./services/endpoints/users";
+import { Profile } from "./pages/Profile";
 export default function App() {
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState(null);
   useEffect(()=>{
     const checkAuth = async() => {
       try{
       setIsAuthenticated(await isAuth());
-      await getProfile();
       
       }catch(error){
         console.error(error);
@@ -28,6 +27,7 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<FormPage isLogin={true} />} />
         <Route path="/signup" element={<FormPage isLogin={false} />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<FormPage isLogin={true} />} />
       </Routes>
     </>
