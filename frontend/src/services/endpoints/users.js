@@ -1,5 +1,5 @@
 import api from "../api";
-import { get, post } from "../utils/request";
+import { get, post, put } from "../utils/request";
 
 export const register = (data) => {
   const route = "/register/";
@@ -39,3 +39,7 @@ export const getProfile = async () => {
     return get(route);
 }
 
+export const editProfile = async (data) => {
+  const route = "/profile/";
+  return put(route, data);
+}
