@@ -27,7 +27,7 @@ if response.status_code == 200:  # User successfully requested the token
     }
 
     project_data = {
-        'name':'new_x_project 5', 
+        'name':'new_x_project 7', 
         'description':'Project created using xclient in team', 
     }
     create_project_response = requests.post(BASE_URL + 'team/new_x_team6/', data=json.dumps(project_data), headers=headers)

@@ -67,15 +67,18 @@ class TeamSerializer(serializers.ModelSerializer):
     owner = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
     class Meta:
         model = Team
-        fields = ['id', 'name', 'description','owner', 'members', 'created_at']
-        read_only_fields = ['id', 'owner', 'created_at']
+        fields = ['id', 'name','owner', 'description', 'slug', 'members', 'created_at']
+        read_only_fields = ['id', 'owner','slug', 'created_at']
 
-    def update(self, instance, validated_data):
-        #for some reason owner is required here even when 
-        # updating owner isn't allowed or is read only.
-        # Prevent updating the owner during update.
-        validated_data.pop('owner', None)
-        return super().update(instance, validated_data)
+
+class TeamOperationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ['id', 'name','owner', 'description', 'slug', 'members', 'created_at']
+        read_only_fields = ['id', 'owner','slug', 'created_at']
+
+
+
     
 
 #This serializer will be used for Serializing "FOR GET QUERY" data only.
@@ -83,8 +86,8 @@ class ProjectSerializer(serializers.ModelSerializer):
     team = serializers.SlugRelatedField(slug_field='slug', queryset=Team.objects.all())
     class Meta:
         model = Project
-        fields = ['id', 'name', 'description', 'team', 'tasks', 'notes', 'created_at']
-        read_only_fields = ['id', 'created_at','tasks','notes'] #tasks and notes are read only fields for project
+        fields = ['id', 'name', 'description','slug', 'team', 'tasks', 'notes', 'created_at']
+        read_only_fields = ['id', 'created_at','slug','tasks','notes'] #tasks and notes are read only fields for project
 
 
 class ProjectOperationSerializer(serializers.ModelSerializer):

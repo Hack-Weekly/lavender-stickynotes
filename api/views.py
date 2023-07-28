@@ -19,7 +19,13 @@ from ipware import get_client_ip
 #project imports
 from api.version import version as api_version
 from api.models import Team, Project
-from api.serializers import TeamSerializer, ProjectSerializer,UserSerializer,ProjectOperationSerializer
+from api.serializers import (
+                                TeamSerializer, 
+                                ProjectSerializer,
+                                UserSerializer,
+                                ProjectOperationSerializer,
+                                TeamOperationSerializer,
+                            )
 from api.permissions import IsMember, IsOwner
 #from api.urls import urlpatterns
 
@@ -107,7 +113,7 @@ class TeamCreateAndListAPIView(APIView):
                         })
 
     def post(self, request, format=None):
-        serializer = TeamSerializer(data=request.data)
+        serializer = TeamOperationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -180,7 +186,7 @@ class TeamDetailView(APIView):
     
     def put(self, request, slug, format=None):
         team = self.get_object(slug=slug)
-        serializer = TeamSerializer(team, data=request.data)
+        serializer = TeamOperationSerializer(team, data=request.data)
         #read serializer update function for more info
         if serializer.is_valid():
             serializer.save(owner=request.user)
@@ -302,3 +308,14 @@ class AddTeamMemberAPIView(APIView):
             return Response("User doesn't exist",status=status.HTTP_400_BAD_REQUEST)
         team.members.remove(user)
         return Response(status=status.HTTP_200_OK)
+    
+
+class TaskAPIView(APIView):
+    pass
+
+class NotesAPIView(APIView):
+    pass
+
+class GroupAPIView(APIView):
+    pass
+
