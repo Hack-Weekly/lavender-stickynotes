@@ -9,7 +9,7 @@ export const getTeams = async () => {
 // create a team
 export const createTeam = async (data) => {
   const route = "/teams/";
-  return await post(route);
+  return await post(route, data);
 };
 
 // get team info
