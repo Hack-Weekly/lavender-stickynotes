@@ -27,15 +27,18 @@ if response.status_code == 200:  # User successfully requested the token
     }
 
     team_data = {
-        'name': 'new_x_team10',
-        'description': 'this is description for creation of team using xclient!',
+        'name': 'new_x_team8',
+        'description': 'this is description for update of team using xclient!',
+        'slug': 'new_x_team8',
+        'owner': 'new_user',
     }
-    create_team_response = requests.post(BASE_URL + 'teams/', data=json.dumps(team_data), headers=headers)
-    if create_team_response.status_code == 201:
-        data = create_team_response.json()
+    update_team_response = requests.put(BASE_URL + 'team/new_x_team8/', data=json.dumps(team_data), headers=headers)
+    print(update_team_response.status_code)
+    if update_team_response.status_code == 200:  # Check for status code 200 for successful update
+        data = update_team_response.json()
         print(data)
     else:
-        print(f"Failed to create team. Status code: {create_team_response.status_code}, Error: {create_team_response.json()}")
+        print(f"Failed to update team. Status code: {update_team_response.status_code}, Error: {update_team_response.json()}")
 
 else:
     print(f"Failed to get access token. Status code: {response.status_code}, Error: {response.json()}")

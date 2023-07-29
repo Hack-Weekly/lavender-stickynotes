@@ -19,8 +19,16 @@ from ipware import get_client_ip
 #project imports
 from api.version import version as api_version
 from api.models import Team, Project
-from api.serializers import TeamSerializer, ProjectSerializer
+from api.serializers import (
+                                TeamSerializer, 
+                                ProjectSerializer,
+                                UserSerializer,
+                                ProjectOperationSerializer,
+                                TeamOperationSerializer,
+                            )
+from api.permissions import IsMember, IsOwner
 #from api.urls import urlpatterns
+
 
 User=get_user_model()
 
@@ -105,7 +113,7 @@ class TeamCreateAndListAPIView(APIView):
                         })
 
     def post(self, request, format=None):
-        serializer = TeamSerializer(data=request.data)
+        serializer = TeamOperationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -115,6 +123,8 @@ class ProjectCreateAndListAPIView(APIView):
     '''
     This class can be accessed with anyone with member level permission.
     '''
+    permission_classes = [IsAuthenticated]
+
     def get (self,request,format=None):
         project_own=Project.objects.filter(team__owner=request.user)
         project_member=Project.objects.filter(team__members=request.user)
@@ -126,14 +136,22 @@ class ProjectCreateAndListAPIView(APIView):
                         {'own_project':serializer_own.data,
                          'member_project':serializer_member.data,
                         })
+    
     #Handle creation of project, Team is required
     #user need to pass the name of team in team field
-    def post(self, request, format=None):
-        serializer = ProjectSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request,slug, format=None):
+        try:
+            team=Team.objects.get(slug=slug)
+        except Team.DoesNotExist:
+            return Response("Team doesn't exist",status=status.HTTP_400_BAD_REQUEST)
+        if IsOwner(request,team).has_permission or IsMember(request,team).has_permission:
+            serializer = ProjectSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("You don't have permission to create project in this team",
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class TeamDetailView(APIView):
@@ -145,8 +163,13 @@ class TeamDetailView(APIView):
     '''
 
     def get_object(self, slug):
+        #Object permission will be defined here
+
         try:
-            return Team.objects.get(slug=slug)
+            team=Team.objects.get(slug=slug)
+            if IsOwner(self.request,team).has_permission or IsMember(self.request,team).has_permission:
+                return team
+            raise Http404
         except Team.DoesNotExist:
             raise Http404
     
@@ -154,17 +177,37 @@ class TeamDetailView(APIView):
     # It will also include members and  all project owned by this team.
     def get(self, request, slug, format=None):
         team = self.get_object(slug)
-        serializer = TeamSerializer(team)
-        return Response(serializer.data)
+        serializer_projects=ProjectSerializer(team.project_team.all(),many=True)
+        serializer_team = TeamSerializer(team)
+        return Response({'team':serializer_team.data,
+                        'projects':serializer_projects.data}
+                        ,status=status.HTTP_200_OK)
 
+    
     def put(self, request, slug, format=None):
         team = self.get_object(slug=slug)
-        serializer = TeamSerializer(team, data=request.data)
+        serializer = TeamOperationSerializer(team, data=request.data)
+        #read serializer update function for more info
         if serializer.is_valid():
             serializer.save(owner=request.user)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def post(self, request,slug, format=None):
+        try:
+            team=Team.objects.get(slug=slug)
+        except Team.DoesNotExist:
+            return Response("Team doesn't exist",status=status.HTTP_400_BAD_REQUEST)
+        if IsOwner(request,team).has_permission or IsMember(request,team).has_permission:
+            serializer = ProjectOperationSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(team=team)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("You don't have permission to create project in this team",
+                        status=status.HTTP_400_BAD_REQUEST)
+    
+    
     def delete(self, request, slug, format=None):
         team = self.get_object(slug=slug)
         team.delete()
@@ -178,9 +221,15 @@ class ProjectDetailView(APIView):
     
     def get_object(self, slug):
         try:
-            return Project.objects.get(slug=slug)
+            project= Project.objects.get(slug=slug)
+            #get the team of ptoject
+            team=project.team
+            if IsOwner(self.request,team).has_permission or IsMember(self.request,team).has_permission:
+                return project
+            raise Http404
         except Project.DoesNotExist:
             raise Http404
+    
     #get  query need to return  notes and tasks of entire project
     def get(self, request, slug, format=None):
         project = self.get_object(slug)
@@ -209,16 +258,64 @@ class UserProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request,format=None):
-
+        profile=User.objects.get(username=request.user)
+        serializer_profile=UserSerializer(profile)
         team_own=Team.objects.filter(owner=request.user)
         serializer_own=TeamSerializer(team_own,many=True)
-        return Response(serializer_own.data,status=status.HTTP_200_OK)
+        return Response({
+                        'profile':serializer_profile.data,
+                        'teams':serializer_own.data}
+                        ,status=status.HTTP_200_OK)
         
     
     def put(self,request,format=None):
-        # user=request.user
-        # serializer=RegisterSerializer(user,data=request.data)
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response(serializer.data)
+        user=request.user
+        serializer=UserSerializer(user,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+class AddTeamMemberAPIView(APIView):
+    '''
+    This class will add member to team.
+    '''
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, slug):
+        try:
+            team=Team.objects.get(slug=slug)
+            if IsOwner(self.request,team).has_permission:
+                return team
+            raise Http404
+        except Team.DoesNotExist:
+            raise Http404
+    
+    def post(self,request,slug,format=None):
+        team=self.get_object(slug)
+        try:
+            user=User.objects.get(username=request.data['username'])
+        except User.DoesNotExist:
+            return Response("User doesn't exist",status=status.HTTP_400_BAD_REQUEST)
+        team.members.add(user)
+        return Response(status=status.HTTP_200_OK)
+    
+    def delete(self,request,slug,format=None):
+        team=self.get_object(slug)
+        try:
+            user=User.objects.get(username=request.data['username'])
+        except User.DoesNotExist:
+            return Response("User doesn't exist",status=status.HTTP_400_BAD_REQUEST)
+        team.members.remove(user)
+        return Response(status=status.HTTP_200_OK)
+    
+
+class TaskAPIView(APIView):
+    pass
+
+class NotesAPIView(APIView):
+    pass
+
+class GroupAPIView(APIView):
+    pass
+

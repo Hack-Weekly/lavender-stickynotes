@@ -29,10 +29,24 @@ class Team(models.Model):
     def __str__(self):
         return self.name
     
-    def save(self,*args,**kwargs):
+    def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug=self.name.replace(' ','-').lower()
-        super(Team,self).save(*args,**kwargs)
+            # Generate the initial slug from the name
+            self.slug = slugify(self.name)
+            if not self.slug:
+                raise ValueError("The name must contain at least one valid character for the slug.")
+            
+            # Check for uniqueness and handle duplicates
+            num_duplicates = Team.objects.filter(slug=self.slug).count()
+            if num_duplicates > 0:
+                base_slug = self.slug
+                suffix = 1
+                while Team.objects.filter(slug=self.slug).exists():
+                    # If a duplicate slug exists, append a unique identifier to it
+                    self.slug = f"{base_slug}-{suffix}"
+                    suffix += 1
+
+        super(Team, self).save(*args, **kwargs)
     
 
 class Project(models.Model):
@@ -57,7 +71,21 @@ class Project(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug=slugify(self.name)
+            # Generate the initial slug from the name
+            self.slug = slugify(self.name)
+            if not self.slug:
+                raise ValueError("The name must contain at least one valid character for the slug.")
+            
+            # Check for uniqueness and handle duplicates
+            num_duplicates = Project.objects.filter(slug=self.slug).count()
+            if num_duplicates > 0:
+                base_slug = self.slug
+                suffix = 1
+                while Project.objects.filter(slug=self.slug).exists():
+                    # If a duplicate slug exists, append a unique identifier to it
+                    self.slug = f"{base_slug}-{suffix}"
+                    suffix += 1
+
         super(Project, self).save(*args, **kwargs)
 
 

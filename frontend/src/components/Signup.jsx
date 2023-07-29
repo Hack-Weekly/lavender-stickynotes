@@ -2,7 +2,6 @@ import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login, register } from "../services/endpoints/users";
-import { Login } from "./Login";
 export const Signup = () => {
   const [email, setEmail] = useState(null);
 
@@ -22,12 +21,12 @@ export const Signup = () => {
     try {
       const response = await register(credentials);
       if (response.status === 201) {
-        login({username : username , password : password});
-        navigate("/");
+        login({ username: username, password: password });
+        navigate("/dashboard");
       }
     } catch (error) {
       setIsValid(false);
-       if (error.response && typeof error.response.data === "object") {
+      if (error.response && typeof error.response.data === "object") {
         const errorMessagesList = Object.entries(error.response.data).map(
           ([key, value]) => key !== "password2" && `${key}: ${value.join(", ")}` // Concatenate key and error messages
         );

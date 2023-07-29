@@ -1,5 +1,5 @@
 import api from "../api";
-import { get, post } from "../utils/request";
+import { get, post, put } from "../utils/request";
 
 export const register = (data) => {
   const route = "/register/";
@@ -33,3 +33,13 @@ export const getRefreshToken = async (refreshToken) => {
   const data = JSON.stringify({ refresh: refreshToken });
   return post(route, data);
 };
+
+export const getProfile = async () => {
+    const route = "/profile/";
+    return get(route);
+}
+
+export const editProfile = async (data) => {
+  const route = "/profile/";
+  return put(route, data);
+}

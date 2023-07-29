@@ -26,16 +26,16 @@ if response.status_code == 200:  # User successfully requested the token
         'refresh': refresh_token,
     }
 
-    team_data = {
-        'name': 'new_x_team10',
-        'description': 'this is description for creation of team using xclient!',
+    project_data = {
+        'name':'new_x_project 7', 
+        'description':'Project created using xclient in team', 
     }
-    create_team_response = requests.post(BASE_URL + 'teams/', data=json.dumps(team_data), headers=headers)
-    if create_team_response.status_code == 201:
-        data = create_team_response.json()
+    create_project_response = requests.post(BASE_URL + 'team/new_x_team6/', data=json.dumps(project_data), headers=headers)
+    if create_project_response.status_code == 201:
+        data = create_project_response.json()
         print(data)
     else:
-        print(f"Failed to create team. Status code: {create_team_response.status_code}, Error: {create_team_response.json()}")
+        print(f"Failed to create team. Status code: {create_project_response.status_code}, Error: {create_project_response.json()}")
 
 else:
     print(f"Failed to get access token. Status code: {response.status_code}, Error: {response.json()}")

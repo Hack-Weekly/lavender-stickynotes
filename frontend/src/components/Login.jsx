@@ -16,7 +16,7 @@ export const Login = () => {
     try {
       const status = await login(credentials);
       if (status === 200) {
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (error) {
       setIsValid(false);
