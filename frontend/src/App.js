@@ -5,15 +5,17 @@ import { useEffect, useState } from "react";
 import { isAuth } from "./services/utils/isAuth";
 import { getProfile } from "./services/endpoints/users";
 import { Profile } from "./pages/Profile";
+import { LandingPage } from "./pages/LandingPage"
+
 export default function App() {
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  useEffect(()=>{
-    const checkAuth = async() => {
-      try{
-      setIsAuthenticated(await isAuth());
-      
-      }catch(error){
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        setIsAuthenticated(await isAuth());
+
+      } catch (error) {
         console.error(error);
         setIsAuthenticated(false);
       }
