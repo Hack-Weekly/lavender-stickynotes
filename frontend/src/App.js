@@ -4,8 +4,7 @@ import { FormPage } from "./pages/FormPage";
 import { useEffect, useState } from "react";
 import { isAuth } from "./services/utils/isAuth";
 import { Profile } from "./pages/Profile";
-import { Projects } from "./pages/Projects";
-import { Login } from "./components/Login";
+import { TeamPage } from "./pages/TeamPage";
 import { Spinner } from "@material-tailwind/react";
 export default function App() {
   const location = useLocation();
@@ -44,8 +43,8 @@ export default function App() {
           element={isAuthenticated ? <Profile /> : <FormPage isLogin={true} />}
         />
         <Route
-          path="/teams/:teamSlug/projects"
-          element={isAuthenticated ? <Projects /> : <FormPage isLogin={true} />}
+          path="/teams/:teamSlug/"
+          element={isAuthenticated ? <TeamPage /> : <FormPage isLogin={true} />}
         />
         <Route path="*" element={<FormPage isLogin={true} />} />
       </Routes>
