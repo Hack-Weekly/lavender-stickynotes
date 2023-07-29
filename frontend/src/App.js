@@ -18,15 +18,16 @@ export default function App() {
         setIsAuthenticated(false);
       }
     }
-  checkAuth();
+    checkAuth();
   }
-  ,[location])
+    , [location])
   return (
     <>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<FormPage isLogin={true} />} />
         <Route path="/signup" element={<FormPage isLogin={false} />} />
+        <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<FormPage isLogin={true} />} />
       </Routes>
