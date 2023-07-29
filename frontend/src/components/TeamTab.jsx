@@ -2,6 +2,7 @@ import React from "react";
 import { Tabs, TabsHeader, TabsBody, Tab, TabPanel, Button } from "@material-tailwind/react";
 import { ProjectsList } from "./ProjectsList";
 import { TeamMembers } from "./TeamMembers";
+import { SettingsTeam } from "./SettingsTeam";
 
 export function TeamTab({teamData}) {
   const [activeTab, setActiveTab] = React.useState("Projects"); // Set "Projects" as the default active tab
@@ -19,7 +20,7 @@ export function TeamTab({teamData}) {
     {
       label: "Settings",
       value: "Settings",
-      desc: <Button>Delete team</Button> ,
+      desc: <SettingsTeam teamSlug={teamData.team.slug}/>,
     },
   ];
 

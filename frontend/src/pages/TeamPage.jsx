@@ -7,7 +7,7 @@ import { Loading } from "../components/Loading";
 import { ClockIcon } from "@heroicons/react/24/solid";
 import { getDaysDifferenceFromToday } from "../utils/dateUtils";
 import { TeamTab } from "../components/TeamTab";
-
+import { useNavigate } from "react-router-dom";
 export const TeamPage = () => {
     const {teamSlug} = useParams();
     const [projects, setProjects] = useState([]);
@@ -15,6 +15,7 @@ export const TeamPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [createdAt, setCreatedAt] = useState("");
     const [teamData, setTeamData] = useState({});
+    const navigate = useNavigate();
     useEffect(()=>{
         const fetchProjects = async() =>{
             try{
@@ -25,6 +26,7 @@ export const TeamPage = () => {
             setCreatedAt(getDaysDifferenceFromToday(response.team.created_at))
             }catch(error){
                 console.error(error);
+                navigate("/dashboard");
             }finally{
                 setIsLoading(false);
             }
