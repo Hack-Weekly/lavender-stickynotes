@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 
 app_name = 'api'
-app_version='v1.5.0'
+
 
 
 urlpatterns = [
@@ -19,9 +19,11 @@ urlpatterns = [
     path('teams/', views.TeamCreateAndListAPIView.as_view(), name='teams'),
     path('team/<slug:slug>/',views.TeamDetailView.as_view(), name='team_detail'),
     path('team/<slug:slug>/add/',views.AddTeamMemberAPIView.as_view(), name='team_add_member'),
-    path('team/<slug:team>/projects/<slug:project>/', views.ProjectDetailView.as_view(), name='project_detail'),
+    path('team/<slug:slug>/project/<int:pk>/', views.ProjectDetailView.as_view(), name='project_detail'),
+    path('team/<slug:slug>/project/<int:pk>/task/', views.TaskAPIView.as_view(), name='task'),
     #path('projects/', views.ProjectCreateAndListAPIView.as_view(), name='projects'), #not need
     path('profile/', views.UserProfileAPIView.as_view(), name='profile'),
+    #path('inbox',)
     
     #path to get project detail
     path('', views.getRoutes,name='routes')
