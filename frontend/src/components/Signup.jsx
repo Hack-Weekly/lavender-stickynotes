@@ -39,7 +39,7 @@ export const Signup = () => {
   };
   return (
     <Card color="transparent" shadow={false}>
-      <Typography variant="h4" color="blue-gray">
+      <Typography variant="h2" color="blue-gray">
         Create account
       </Typography>
       <Typography color="gray" className="mt-1 font-normal">
@@ -71,8 +71,7 @@ export const Signup = () => {
             type="password"
             size="lg"
             label="password"
-            c
-            olor="pink"
+            color="pink"
             onChange={(e) => {
               setPassword(e.target.value);
               setIsValid(true);
