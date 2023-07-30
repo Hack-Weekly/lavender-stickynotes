@@ -4,13 +4,13 @@ import { ProjectsList } from "./ProjectsList";
 import { TeamMembers } from "./TeamMembers";
 import { SettingsTeam } from "./SettingsTeam";
 
-export function TeamTab({teamData}) {
+export function TeamTab({teamData, setModalIsOpen}) {
   const [activeTab, setActiveTab] = React.useState("Projects"); // Set "Projects" as the default active tab
   const data = [
     {
       label: "Projects",
       value: "Projects",
-      desc: <ProjectsList projects={teamData.projects} />,
+      desc: <ProjectsList teamSlug={teamData.team.slug} projects={teamData.projects} setModalIsOpen={setModalIsOpen} />,
     },
     {
       label: "Members",

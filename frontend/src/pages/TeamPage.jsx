@@ -8,6 +8,8 @@ import { ClockIcon } from "@heroicons/react/24/solid";
 import { getDaysDifferenceFromToday } from "../utils/dateUtils";
 import { TeamTab } from "../components/TeamTab";
 import { useNavigate } from "react-router-dom";
+import { CreateProjectModal } from "../components/CreateProjectModel";
+import { createProject } from "../services/endpoints/projects";
 export const TeamPage = () => {
     const {teamSlug} = useParams();
     const [projects, setProjects] = useState([]);
@@ -16,6 +18,7 @@ export const TeamPage = () => {
     const [createdAt, setCreatedAt] = useState("");
     const [teamData, setTeamData] = useState({});
     const navigate = useNavigate();
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     useEffect(()=>{
         const fetchProjects = async() =>{
             try{
@@ -32,7 +35,15 @@ export const TeamPage = () => {
             }
         }
         fetchProjects();
-    },[teamSlug])
+    },[teamSlug, modalIsOpen])
+    const handleCreateProject = async(projectName, projectDescription) => {
+        try {
+        const data = {name : projectName, description : projectDescription};
+        await createProject(teamSlug, data);
+        }catch(error){
+            console.error(error);
+        }
+    }
     if (isLoading) return <Loading />
     return(
         <div className="h-screen w-screen flex bg-gray-50">
@@ -46,10 +57,10 @@ export const TeamPage = () => {
                     <ClockIcon  className="h-3 w-3 opacity-60" />
                     <Typography className="text-xs font-thin opacity-60" >Created {createdAt} days ago</Typography>
                 </div>
-                <TeamTab teamData = {teamData} />
+                <TeamTab teamData = {teamData} setModalIsOpen={setModalIsOpen}/>
                 </div>
             </div>
-            
+            <CreateProjectModal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)  } createProject={handleCreateProject}/>
         </div>
     )
 }

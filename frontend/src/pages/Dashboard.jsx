@@ -6,8 +6,9 @@ import { BoltIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { Activities } from "../components/Activitites";
 import { useEffect, useState } from "react";
 import { getTeams } from "../services/endpoints/teams";
+import { AvatarGen } from "../components/AvatarGen";
 
-export const Dashboard = () => {
+export const Dashboard = ({username}) => {
   const [teamsNumber, setTeamsNumber] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -31,7 +32,7 @@ export const Dashboard = () => {
       </div> 
       <div className=" h-full w-full p-7 bg-gray-50 flex flex-col">
         <div className="flex flex-row-reverse justify-between">
-          <UserCircleIcon className="h-7 w-7" />
+          <AvatarGen username={username} className="h-9 w-9" />
           <p className="text-3xl">Dashboard</p>
         </div>
         <div className="stats flex flex-row justify-evenly max-h-80 h-2/5 mt-5 ">

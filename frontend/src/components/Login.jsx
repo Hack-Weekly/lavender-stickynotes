@@ -39,7 +39,7 @@ export const Login = () => {
           <Input
             size="lg"
             label="username"
-            color="pink"
+            color="blue"
             onChange={(e) => {
               setUsername(e.target.value);
               setIsValid(true);
@@ -50,7 +50,7 @@ export const Login = () => {
             type="password"
             size="lg"
             label="Password"
-            color="pink"
+            color="blue"
             onChange={(e) => {
               setPassword(e.target.value);
               setIsValid(true);
@@ -63,7 +63,7 @@ export const Login = () => {
             </Typography>
           )}
         </div>
-        <Button className="mt-6 bg-pink-300" type="submit" fullWidth>
+        <Button className="mt-6 bg-blue-300" type="submit" fullWidth>
           Login
         </Button>
         <Typography color="gray" className="mt-4 text-center font-normal">
@@ -71,7 +71,7 @@ export const Login = () => {
           <Link to="/signup">
             <span
               href="#"
-              className="font-medium text-pink-200 transition-colors hover:text-pink-700"
+              className="font-medium text-blue-200 transition-colors hover:text-blue-700"
             >
               Sign up
             </span>

@@ -1,16 +1,16 @@
 import { Login } from "../components/Login";
 import { Signup } from "../components/Signup";
-
+import logo from "../imgs/sticky-notes-logo-color-4.png";
 export const FormPage = ({ isLogin }) => {
   return (
     <div className="grid h-screen w-screen bg-[#fafafa] sm:grid-cols-1 md:grid-cols-3">
-      <div className="col-span-1 grid h-full grid-cols-12 bg-pink-300  sm:hidden md:block">
+      <div className="col-span-1 grid h-full grid-cols-12 bg-blue-300  sm:hidden md:block">
         {/* <p className="text-center text-4xl"> Sticky Notes</p> */}
         <div className="col-span- p-16">
           {/* //!logo is not showing */}
           <img
             className="absolute h-[20vh] w-[20vw] rounded-2xl bg-[#fafafa] md:left-[1.5vw] lg:left-[6vw] lg:top-[6vh]"
-            src="../imgs/sticky-notes-logo-color-4.png"
+            src={logo}
             alt="logo"
           />
           <div className="absolute bottom-[34vh] left-[16vw] z-30 h-[20vw] w-[20vw] rounded-2xl bg-[#bef9c8] md:bottom-[40vh] lg:h-[30vh] lg:w-[30vh]"></div>
