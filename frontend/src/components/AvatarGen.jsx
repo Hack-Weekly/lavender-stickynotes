@@ -3,7 +3,6 @@ import './AvatarGen.css'; // Import your CSS file for avatar styling (create one
 
 export const AvatarGen = ({ username, className }) => {
   const getInitial = (username) => {
-    console.log(username);
     try{
        return username.charAt(0).toUpperCase();
     }catch(error){
