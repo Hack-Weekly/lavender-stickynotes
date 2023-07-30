@@ -29,7 +29,7 @@ export const TeamPage = () => {
             setCreatedAt(getDaysDifferenceFromToday(response.team.created_at))
             }catch(error){
                 console.error(error);
-                navigate("/dashboard");
+                navigate("/teams");
             }finally{
                 setIsLoading(false);
             }

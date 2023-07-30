@@ -17,11 +17,11 @@ export const ProjectsList = ({ teamSlug, projects, setModalIsOpen }) => {
       ) : (
         <>
           <p>No project available.</p>
-          <div onClick={() => setModalIsOpen(true)}>
-            <Add />
-          </div>
         </>
       )}
+      <div onClick={() => setModalIsOpen(true)}>
+        <Add />
+      </div>
     </>
   );
 };

@@ -10,7 +10,6 @@ import {
   PlusIcon,
   PencilIcon,
   ArchiveBoxIcon,
-  CurrencyDollarIcon,
 } from "@heroicons/react/24/solid";
  
 export function Activities() {

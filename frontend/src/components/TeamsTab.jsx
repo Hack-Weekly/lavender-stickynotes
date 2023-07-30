@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { AvatarGen } from "./AvatarGen";
-import { useEffect } from "react";
 
 export const TeamsTab = ({ teams = [] }) =>  {
   return (
