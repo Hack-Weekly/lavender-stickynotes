@@ -6,6 +6,7 @@ import { isAuth } from "./services/utils/isAuth";
 import { Profile } from "./pages/Profile";
 import { TeamPage } from "./pages/TeamPage";
 import { Spinner } from "@material-tailwind/react";
+import { Teams } from "./pages/Teams";
 export default function App() {
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -43,6 +44,9 @@ export default function App() {
           element={isAuthenticated ? <Profile /> : <FormPage isLogin={true} />}
         />
         <Route
+          path="/teams"
+          element={isAuthenticated ? <Teams /> : <FormPage isLogin={true} />}
+        />        <Route
           path="/teams/:teamSlug/"
           element={isAuthenticated ? <TeamPage /> : <FormPage isLogin={true} />}
         />
