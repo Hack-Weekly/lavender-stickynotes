@@ -13,7 +13,7 @@ export const CreateProjectModal = ({ isOpen, closeModal, createProject }) => {
   };
 
   return (
-    <>w
+    <>
       <Dialog open={isOpen} handler={closeModal}>
         <DialogHeader>Create Project</DialogHeader>
         <DialogBody divider>
