@@ -8,7 +8,7 @@ export const SettingsTeam = ({teamSlug}) => {
         const delTeam = async() => {
         try {
             await deleteTeam(teamSlug);
-            navigate("/dashboard");
+            navigate("/teams");
         }catch(error){
             console.error(error);
         }

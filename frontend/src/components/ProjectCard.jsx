@@ -6,23 +6,17 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-export function ProjectCard({projectInfo}) {
-  const {name, description, slug} = projectInfo;
+export function ProjectCard({teamSlug, projectInfo}) {
+  const {name, slug} = projectInfo;
   return (
-    <Card className="mt-6 w-96">
-      <CardBody>
-        <Typography variant="h5" color="blue-gray" className="mb-2">
+    <Link to={`/teams/${teamSlug}/projects/${slug}`}>
+    <div className="border-2 border-grey rounded-lg relative hover:shadow-lg" style={{ paddingBottom: '100%' }}>
+     <div className="absolute inset-0 flex items-center justify-center">
+        <p className="text-lg font-medium">
           {name}
-        </Typography>
-        <Typography>
-          {description}
-        </Typography>
-      </CardBody>
-      <CardFooter className="pt-0">
-        <Link to={"/projects/" + slug }>
-        <Button>Read More</Button>
-        </Link>
-      </CardFooter>
-    </Card>
+        </p>
+      </div>
+    </div>
+    </Link>
   );
 }

@@ -7,8 +7,9 @@ import { TeamsTab } from '../components/TeamsTab';
 import { CardInfo } from "../components/CardInfo";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { Spinner } from "@material-tailwind/react";
+import { AvatarGen } from "../components/AvatarGen";
 
-export const Teams = () => {
+export const Teams = ({username}) => {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -37,7 +38,7 @@ export const Teams = () => {
     try {
       const response = await createTeam({ name, description });
       if (response && response.data) {
-        setTeams((prevTeams) => [{...response.data, isOwner: true}, ...prevTeams]);
+        setTeams((prevTeams) => [{...response.data, owner : username, isOwner: true}, ...prevTeams]);
       } else {
         console.error('Invalid response or response is undefined.');
       }
@@ -59,7 +60,7 @@ export const Teams = () => {
       </div>
       <div className="h-full w-full p-7 bg-gray-50 flex flex-col">
         <div className="flex flex-row-reverse justify-between">
-          <UserCircleIcon className="h-7 w-7" />
+          <AvatarGen username={username} className="h-9 w-9" />
           <p className="text-3xl">Teams Overview</p>
         </div>
         <div className="stats flex flex-row mt-7 mb-7 items-end space-x-4"> 
