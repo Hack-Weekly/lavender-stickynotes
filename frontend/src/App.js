@@ -4,6 +4,7 @@ import { FormPage } from "./pages/FormPage";
 import { useEffect, useState } from "react";
 import { isAuth } from "./services/utils/isAuth";
 import { Profile } from "./pages/Profile";
+import { LandingPage } from "./pages/LandingPage"
 import { TeamPage } from "./pages/TeamPage";
 import { Spinner } from "@material-tailwind/react";
 import { Teams } from "./pages/Teams";
