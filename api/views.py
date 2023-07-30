@@ -18,13 +18,16 @@ from ipware import get_client_ip
 
 #project imports
 from api.version import version as api_version
-from api.models import Team, Project
+from api.models import Team, Project, Task,Note
 from api.serializers import (
                                 TeamSerializer, 
                                 ProjectSerializer,
                                 UserSerializer,
                                 ProjectOperationSerializer,
                                 TeamOperationSerializer,
+                                TaskSerializer,
+                                TaskOperationSerializer,
+                                NoteSerializer,
                             )
 from api.permissions import IsMember, IsOwner
 #from api.urls import urlpatterns
@@ -95,7 +98,7 @@ class TeamCreateAndListAPIView(APIView):
     Get query can only be allowed to user with member or owner level permission.
     Post can be done by anyone.
     '''
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self,request,format=None):
         
@@ -218,12 +221,13 @@ class ProjectDetailView(APIView):
     '''
     All method except delete can be accessed by any member of team..
     '''
+
     
-    def get_object(self, slug):
+    def get_object(self,slug,pk):
         try:
-            project= Project.objects.get(slug=slug)
+            project= Project.objects.get(id=pk)
             #get the team of ptoject
-            team=project.team
+            team=Team.objects.get(slug=slug)
             if IsOwner(self.request,team).has_permission or IsMember(self.request,team).has_permission:
                 return project
             raise Http404
@@ -231,8 +235,12 @@ class ProjectDetailView(APIView):
             raise Http404
     
     #get  query need to return  notes and tasks of entire project
-    def get(self, request, slug, format=None):
-        project = self.get_object(slug)
+    def get(self, request,slug,pk, format=None):
+        project = self.get_object(slug,pk)
+        #add task and notes of  team
+        #will avoid this as task and notes already got in many to many field
+        tasks = 1
+        notes = 1
         serializer = ProjectSerializer(project)
         return Response(serializer.data)
 
@@ -311,7 +319,23 @@ class AddTeamMemberAPIView(APIView):
     
 
 class TaskAPIView(APIView):
-    pass
+    
+    def post(self,request,slug,pk):
+        try: 
+            team=Team.objects.get(slug=slug)
+            project=Project.objects.get(id=pk)
+        except Exception as e:
+            return Response("Team/project doesn't exist or you don't have access to it!",status=status.HTTP_400_BAD_REQUEST)
+        if IsOwner(self.request,team).has_permission or IsMember(self.request,team).has_permission:
+            serializer=TaskOperationSerializer(data=request.data) 
+            if serializer.is_valid():
+                serializer.save(owner=request.user)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Team/project doesn't exist or you don't have access to it!",status=status.HTTP_400_BAD_REQUEST)
+
+        
+
 
 class NotesAPIView(APIView):
     pass

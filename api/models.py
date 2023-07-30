@@ -91,6 +91,7 @@ class Project(models.Model):
 
 class Task(models.Model):
     name = models.CharField(max_length=100)
+    owner=models.ForeignKey(User,on_delete=models.CASCADE,related_name='task_owner')
     description = models.CharField(max_length=500)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='task_project')
     group=models.ForeignKey('Group',on_delete=models.CASCADE,related_name='task_group',null=True,blank=True)
@@ -103,6 +104,7 @@ class Task(models.Model):
     
 class Note(models.Model):
     name = models.CharField(max_length=100)
+    owner=models.ForeignKey(User,on_delete=models.CASCADE,related_name='note_owner')
     project=models.ForeignKey(Project,on_delete=models.CASCADE,related_name='note_project')
     group=models.ForeignKey('Group',on_delete=models.CASCADE,related_name='note_group',null=True,blank=True)
     description = models.TextField()
@@ -135,9 +137,17 @@ class Objectives(models.Model):
     '''
     name = models.CharField(max_length=100)
     completed=models.BooleanField(default=False)
-    task=models.ForeignKey(Task,on_delete=models.CASCADE,related_name='objective_task')
+    task=models.ForeignKey(Task,on_delete=models.CASCADE,related_name='objective_task',null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):
         return self.name
+
+class Notification(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    message=models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.user
+    

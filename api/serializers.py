@@ -79,11 +79,65 @@ class TeamOperationSerializer(serializers.ModelSerializer):
 
 
 
+class ObjectivesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Objectives
+        fields = '__all__'
+        read_only_fields = ['id']
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    owner = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
+    objectives = ObjectivesSerializer(many=True, required=False)
+    class Meta:
+        model = Task
+        fields = ['id', 'name','description','objectives', 'project','owner', 'created_at']
+        read_only_fields = ['id', 'created_at','owner']
+
+
+
+class TaskOperationSerializer(serializers.ModelSerializer):
+    objectives = ObjectivesSerializer(many=True, required=False)
+    class Meta:
+        model = Task
+        fields = ['id', 'name', 'description','objectives','project','deadline','owner','created_at']
+        read_only_fields = ['id', 'created_at','owner']
+
+
+    def create(self, validated_data):
+        objectives_data = validated_data.pop('objectives', [])
+        task = Task.objects.create(**validated_data)
+
+        for objective_data in objectives_data:
+            objective=Objectives.objects.create(task=task, **objective_data)
+            #there was no way to handle many to many field so appending the objectives
+            #here
+            task.objectives.add(objective)
+        return task
+ 
+
+class NoteSerializer(serializers.ModelSerializer):
+    owner = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
+    class Meta:
+        model = Note
+        fields = ['id', 'name','description', 'project','owner', 'created_at']
+        read_only_fields = ['id', 'created_at','owner']
+
+
+class NoteOperationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = ['id', 'name','description', 'project','owner', 'created_at']
+        read_only_fields = ['id', 'created_at','owner']
+
     
 
 #This serializer will be used for Serializing "FOR GET QUERY" data only.
 class ProjectSerializer(serializers.ModelSerializer):
     team = serializers.SlugRelatedField(slug_field='slug', queryset=Team.objects.all())
+    tasks=TaskSerializer(many=True, required=False)
+    notes=NoteSerializer(many=True, required=False)
+    
     class Meta:
         model = Project
         fields = ['id', 'name', 'description','slug', 'team', 'tasks', 'notes', 'created_at']
@@ -94,35 +148,6 @@ class ProjectOperationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id', 'name', 'description', 'team', 'tasks', 'notes', 'created_at']
-        read_only_fields = ['id', 'created_at','team','tasks','notes'] #tasks and notes are read only fields for project
-
-
-
-class TaskSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Task
-        fields = ['id', 'name', 'description', 'project', 'created_at']
-        read_only_fields = ['id', 'created_at']
-
- 
-
-class NoteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Note
-        fields = ['id', 'name', 'description', 'project', 'created_at']
-        read_only_fields = ['id', 'created_at']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['id']['created_at'] = None
-        return data
-
-    def create(self,validated_data):
-        project_data = validated_data.pop('project')
-        try:
-            validated_data['project']= Project.objects.get(**project_data)
-        except Project.DoesNotExist:
-            raise ValidationError("Specified project does not exist.")
-        return super().create(validated_data)
+        read_only_fields = ['id', 'created_at','team'] 
 
 
