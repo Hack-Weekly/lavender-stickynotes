@@ -31,6 +31,10 @@ export function SideBar() {
   const handleDashboard = () => {
     navigate("/dashboard")
   }
+  const handleTeams = () => {
+    navigate("/teams");
+  };
+  
   return (
     <Card className="h-screen w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
       <div className="mb-2 p-4">
@@ -45,7 +49,7 @@ export function SideBar() {
           </ListItemPrefix>
           Dashboard
         </ListItem>
-        <ListItem>
+        <ListItem onClick={handleTeams}>
           <ListItemPrefix>
             <UsersIcon className="h-5 w-5" />
           </ListItemPrefix>

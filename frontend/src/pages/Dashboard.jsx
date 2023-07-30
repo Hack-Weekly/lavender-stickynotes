@@ -28,7 +28,7 @@ export const Dashboard = () => {
     <div className="h-screen w-screen flex bg-gray-50">
       <div>
         <SideBar />
-      </div>
+      </div> 
       <div className=" h-full w-full p-7 bg-gray-50 flex flex-col">
         <div className="flex flex-row-reverse justify-between">
           <UserCircleIcon className="h-7 w-7" />
