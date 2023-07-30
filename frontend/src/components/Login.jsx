@@ -5,7 +5,7 @@ import { login } from "../services/endpoints/users";
 export const Login = () => {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
-  const [isValid, setIsValid ] = useState(true);
+  const [isValid, setIsValid] = useState(true);
   const navigate = useNavigate();
   const onFinish = async (e) => {
     e.preventDefault();
@@ -25,30 +25,39 @@ export const Login = () => {
   };
   return (
     <Card color="transparent" shadow={false}>
-      <Typography variant="h4" color="blue-gray">
-        Welcome back !
+      <Typography variant="h2" color="blue-gray">
+        Welcome back!
       </Typography>
       <Typography color="gray" className="mt-1 font-normal">
-        Enter the information you entered while registering
+        Kindly provide your information
       </Typography>
-      <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96" onSubmit={onFinish}>
+      <form
+        className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+        onSubmit={onFinish}
+      >
         <div className="mb-4 flex flex-col gap-6">
           <Input
             size="lg"
             label="username"
             color="pink"
-            onChange={(e) => {setUsername(e.target.value) ; setIsValid(true)}}
-            error = {!isValid}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              setIsValid(true);
+            }}
+            error={!isValid}
           />
           <Input
             type="password"
             size="lg"
             label="Password"
             color="pink"
-            onChange={(e) => {setPassword(e.target.value) ; setIsValid(true)}}
-            error = {!isValid}
-            />
-            {!isValid && (
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setIsValid(true);
+            }}
+            error={!isValid}
+          />
+          {!isValid && (
             <Typography color="red" className="mt-2 text-center font-normal">
               Please enter a valid username and password !
             </Typography>
