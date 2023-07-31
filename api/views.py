@@ -28,6 +28,7 @@ from api.serializers import (
                                 TaskSerializer,
                                 TaskOperationSerializer,
                                 NoteSerializer,
+                                NoteOperationSerializer
                             )
 from api.permissions import IsMember, IsOwner
 #from api.urls import urlpatterns
@@ -222,6 +223,8 @@ class ProjectDetailView(APIView):
     All method except delete can be accessed by any member of team..
     '''
 
+    permission_classes=[IsAuthenticated]
+
     
     def get_object(self,slug,pk):
         try:
@@ -319,6 +322,11 @@ class AddTeamMemberAPIView(APIView):
     
 
 class TaskAPIView(APIView):
+    '''
+    User send post request on this view with slug and pk.
+    '''
+
+    permission_classes=[IsAuthenticated]
     
     def post(self,request,slug,pk):
         try: 
@@ -329,7 +337,8 @@ class TaskAPIView(APIView):
         if IsOwner(self.request,team).has_permission or IsMember(self.request,team).has_permission:
             serializer=TaskOperationSerializer(data=request.data) 
             if serializer.is_valid():
-                serializer.save(owner=request.user)
+                task=serializer.save(owner=request.user)
+                project.tasks.add(task)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response("Team/project doesn't exist or you don't have access to it!",status=status.HTTP_400_BAD_REQUEST)
@@ -337,9 +346,26 @@ class TaskAPIView(APIView):
         
 
 
-class NotesAPIView(APIView):
-    pass
+class NoteAPIView(APIView):
 
+    permission_classes=[IsAuthenticated]
+    
+    def post(self,request,slug,pk):
+        try: 
+            team=Team.objects.get(slug=slug)
+            project=Project.objects.get(id=pk)
+        except Exception as e:
+            return Response("Team/project doesn't exist or you don't have access to it!",status=status.HTTP_400_BAD_REQUEST)
+        if IsOwner(self.request,team).has_permission or IsMember(self.request,team).has_permission:
+            serializer=NoteOperationSerializer(data=request.data) 
+            if serializer.is_valid():
+                task=serializer.save(owner=request.user)
+                project.notes.add(task)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Team/project doesn't exist or you don't have access to it!",status=status.HTTP_400_BAD_REQUEST)
+
+        
 class GroupAPIView(APIView):
     pass
 
