@@ -6,7 +6,7 @@ import {
   Typography,
   TimelineHeader,
 } from "@material-tailwind/react";
-import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { FireIcon } from "@heroicons/react/24/solid";
 import { formatDate } from "../utils/dateUtils";
 import { useEffect, useState } from "react";
 
@@ -28,7 +28,7 @@ export function ActivitiesProjects({ tasks }) {
     "
     >
       <div>
-        <Typography variant="h5">Added Tasks :</Typography>
+        <Typography variant="h5">Task history :</Typography>
         <Timeline>
           {sortedTasks.map((task, index) => {
             return (
@@ -37,8 +37,8 @@ export function ActivitiesProjects({ tasks }) {
                   <TimelineConnector className="!w-[78px]" />
                 )}
                 <TimelineHeader className="relative rounded-xl border border-blue-gray-50 bg-white py-3 pl-4 pr-8 shadow-lg shadow-blue-gray-900/5">
-                  <TimelineIcon className="p-3" variant="ghost">
-                    <PlusCircleIcon className="h-5 w-5" />
+                  <TimelineIcon className="p-3" variant="gradient">
+                    <FireIcon className="h-5 w-5" />
                   </TimelineIcon>
                   <div className="flex flex-col gap-1">
                     <div className="flex flex-row gap-1 items-center">

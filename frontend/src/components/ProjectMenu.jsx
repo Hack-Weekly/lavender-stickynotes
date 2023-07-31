@@ -8,7 +8,11 @@ import {
 import { DashboardProject } from "./DashboardProject";
 import { TaskList } from "./TaskList";
 import { NoteList } from "./NoteList";
-export function ProjectMenu({teamSlug, projectData, teamData}) {
+import { useState } from "react";
+export function ProjectMenu({teamSlug, projectData, teamData, fetchData}) {
+  const handleTabSelect = () => {
+    fetchData(); 
+  }
   const data = [
     {
       label: "Dashboard",
@@ -28,7 +32,7 @@ export function ProjectMenu({teamSlug, projectData, teamData}) {
   ];
  
   return (
-    <Tabs value="Dashboard" className="w-[65rem]">
+    <Tabs value="Dashboard" className="w-[65rem]" >
       <TabsHeader
         className="bg-transparent"
         indicatorProps={{
@@ -36,7 +40,7 @@ export function ProjectMenu({teamSlug, projectData, teamData}) {
         }}
       >
         {data.map(({ label, value }) => (
-          <Tab key={value} value={value}>
+          <Tab key={value} value={value} onClick={handleTabSelect}>
             {label}
           </Tab>
         ))}

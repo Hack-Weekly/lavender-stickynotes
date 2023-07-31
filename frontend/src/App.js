@@ -55,7 +55,7 @@ export default function App() {
         <Route path="/signup" element={<FormPage isLogin={false} />} />
         <Route
           path="/profile"
-          element={isAuthenticated ? <Profile /> : <FormPage isLogin={true} />}
+          element={isAuthenticated ? <Profile username={username} /> : <FormPage isLogin={true} />}
         />
         <Route
           path="/teams"

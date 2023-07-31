@@ -1,22 +1,39 @@
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Typography,
-  Button,
-} from "@material-tailwind/react";
+import { Card, CardBody, Typography, Button, CardFooter, Chip } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-export function ProjectCard({teamSlug, projectInfo}) {
-  const {name, id} = projectInfo;
+import { formatDate } from "../utils/dateUtils";
+
+export function ProjectCard({ teamSlug, projectInfo }) {
+  const { id, name, description, tasks, created_at } = projectInfo;
+
   return (
-    <Link to={`/teams/${teamSlug}/projects/${id}`}>
-    <div className="border-2 border-grey rounded-lg relative hover:shadow-lg" style={{ paddingBottom: '100%' }}>
-     <div className="absolute inset-0 flex items-center justify-center">
-        <p className="text-lg font-medium">
+    <Card className="hover:shadow-lg">
+      <CardBody>
+        <Typography variant="h5" color="blue-gray" className="truncate">
           {name}
-        </p>
-      </div>
-    </div>
-    </Link>
+        </Typography>
+        <Typography variant="body2" color="gray" className="mt-2 line-clamp-3">
+          {description}
+        </Typography>
+        <div className="flex items-center mt-4">
+          <Typography variant="caption" color="gray">
+            Created: {formatDate(created_at)}
+          </Typography>
+        </div>
+      </CardBody>
+      <CardFooter>
+        <div className="flex justify-between items-center">
+          <Button color="blue" size="sm" className="mr-2">
+            <Link to={`/teams/${teamSlug}/projects/${id}`}>View Project</Link>
+          </Button>
+          <div className="flex items-center">
+            <Typography variant="body2" color="gray" className="mr-2">
+              {tasks.length} {tasks.length === 1 ? "Task" : "Tasks"}
+            </Typography>
+            <Chip color={tasks.length > 0 ? "blue" : "red"} size="sm" className="p-2">
+            </Chip>
+          </div>
+        </div>
+      </CardFooter>
+    </Card>
   );
 }
