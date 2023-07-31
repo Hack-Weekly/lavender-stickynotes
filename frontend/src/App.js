@@ -40,7 +40,7 @@ export default function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={isAuthenticated ? <Dashboard username={username} />:<LandingPage />} />
         <Route
           path="/dashboard"
           element={
@@ -68,7 +68,7 @@ export default function App() {
           element={isAuthenticated ? <TeamPage /> : <FormPage isLogin={true} />}
         />
         <Route
-          path="/teams/:teamSlug/projects/:projectSlug"
+          path="/teams/:teamSlug/projects/:projectId"
           element={isAuthenticated ? <ProjectPage /> : <FormPage isLogin={true} />}
         />
         <Route path="*" element={<FormPage isLogin={true} />} />

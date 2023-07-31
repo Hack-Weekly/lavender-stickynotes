@@ -13,3 +13,33 @@ export function getDaysDifferenceFromToday(timestamp) {
 
   return days;
 }
+
+export function formatDate(inputDate) {
+  const date = new Date(inputDate);
+  const months = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
+
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  const formattedDate = `${day} ${month} ${hours % 12}:${minutes
+    .toString()
+    .padStart(2, "0")} ${ampm}`;
+
+  return formattedDate;
+}

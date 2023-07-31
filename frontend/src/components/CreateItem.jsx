@@ -1,35 +1,35 @@
 import React, { useState } from "react";
 import { Button, Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
 
-export const CreateProjectModal = ({ isOpen, closeModal, createProject }) => {
-  const [projectName, setProjectName] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
+export const CreateItem = ({ isOpen, closeModal, createHandler, createdItem }) => {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleCreateProject = () => {
-    createProject(projectName, projectDescription);
-    setProjectName('');
-    setProjectDescription('');
+    createHandler(name, description);
+    setName('');
+    setDescription('');
     closeModal(); // Close the dialog after submitting the project
   };
 
   return (
     <>
       <Dialog open={isOpen} handler={closeModal}>
-        <DialogHeader>Create Project</DialogHeader>
+        <DialogHeader>{"Create " + createdItem}</DialogHeader>
         <DialogBody divider>
           <input
             type="text"
             className="mb-4 w-full px-3 py-2 border border-gray-300 rounded-md"
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
-            placeholder="Project Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={ createdItem + " Name"}
           />
           <input
             type="text"
             className="mb-4 w-full px-3 py-2 border border-gray-300 rounded-md"
-            value={projectDescription}
-            onChange={(e) => setProjectDescription(e.target.value)}
-            placeholder="Project Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder={createdItem +" Description"}
           />
         </DialogBody>
         <DialogFooter>

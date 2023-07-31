@@ -17,7 +17,6 @@ export function AddMemberModal({ isOpen, closeModal }) {
       return; 
     }
 
-    console.log("Adding user:", username);
     setUsername("");
     setIsUsernameEmpty(false); 
     closeModal();

@@ -7,9 +7,9 @@ import {
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 export function ProjectCard({teamSlug, projectInfo}) {
-  const {name, slug} = projectInfo;
+  const {name, id} = projectInfo;
   return (
-    <Link to={`/teams/${teamSlug}/projects/${slug}`}>
+    <Link to={`/teams/${teamSlug}/projects/${id}`}>
     <div className="border-2 border-grey rounded-lg relative hover:shadow-lg" style={{ paddingBottom: '100%' }}>
      <div className="absolute inset-0 flex items-center justify-center">
         <p className="text-lg font-medium">

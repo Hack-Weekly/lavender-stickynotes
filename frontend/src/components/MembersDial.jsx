@@ -31,10 +31,10 @@ export function MembersDial({handleBackClick, handleDeleteClick}) {
               <HomeIcon className="h-5 w-5" onClick={handleHomeClick} />
             </SpeedDialAction>
                 <SpeedDialAction className="bg-blue-gray-50">
-              <ArrowLeftIcon className="h-5 w-5" />
+              <ArrowLeftIcon className="h-5 w-5" onClick={handleBackClick}/>
             </SpeedDialAction>
             <SpeedDialAction className="bg-blue-gray-50">
-              <TrashIcon color="red" className="h-5 w-5" />
+              <TrashIcon color="red" className="h-5 w-5" onClick={handleDeleteClick} />
             </SpeedDialAction>
         
           </SpeedDialContent>

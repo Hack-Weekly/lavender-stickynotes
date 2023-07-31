@@ -8,7 +8,7 @@ import { ClockIcon } from "@heroicons/react/24/solid";
 import { getDaysDifferenceFromToday } from "../utils/dateUtils";
 import { TeamTab } from "../components/TeamTab";
 import { useNavigate } from "react-router-dom";
-import { CreateProjectModal } from "../components/CreateProjectModel";
+import { CreateItem } from "../components/CreateItem";
 import { createProject } from "../services/endpoints/projects";
 export const TeamPage = () => {
     const {teamSlug} = useParams();
@@ -60,7 +60,7 @@ export const TeamPage = () => {
                 <TeamTab teamData = {teamData} setModalIsOpen={setModalIsOpen}/>
                 </div>
             </div>
-            <CreateProjectModal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)  } createProject={handleCreateProject}/>
+            <CreateItem isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)  } createHandler={handleCreateProject} createdItem="project"/>
         </div>
     )
 }

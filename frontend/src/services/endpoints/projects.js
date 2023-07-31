@@ -1,8 +1,8 @@
 import { del, get, post, put } from "../utils/request";
 
 // get project details
-export const getProject = async (teamSlug, projectSlug) => {
-  const route = `team/${teamSlug}/projects/${projectSlug}/`;
+export const getProject = async (teamSlug, projectID) => {
+  const route = `team/${teamSlug}/project/${projectID}/`;
   return await get(route);
 };
 
@@ -13,13 +13,13 @@ export const createProject = async (teamSlug, data) => {
 };
 
 // edit project
-export const editProject = async (teamSlug, projectSlug, data) => {
-  const route = `team/${teamSlug}/projects/${projectSlug}/`;
+export const editProject = async (teamSlug, projectID, data) => {
+  const route = `team/${teamSlug}/project/${projectID}/`;
   return await put(route, data);
 };
 
 // delete project 
-export const deleteProject = async(teamSlug, projectSlug) => {
-    const route = `team/${teamSlug}/projects/${projectSlug}/`;
-    return await del(route);
-}
+export const deleteProject = async (teamSlug, projectID) => {
+  const route = `team/${teamSlug}/project/${projectID}/`;
+  return await del(route);
+};
