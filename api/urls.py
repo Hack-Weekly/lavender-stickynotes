@@ -21,6 +21,7 @@ urlpatterns = [
     path('team/<slug:slug>/add/',views.AddTeamMemberAPIView.as_view(), name='team_add_member'),
     path('team/<slug:slug>/project/<int:pk>/', views.ProjectDetailView.as_view(), name='project_detail'),
     path('team/<slug:slug>/project/<int:pk>/task/', views.TaskAPIView.as_view(), name='task'),
+    path('team/<slug:slug>/project/<int:pk>/note/', views.NoteAPIView.as_view(), name='note'),
     #path('projects/', views.ProjectCreateAndListAPIView.as_view(), name='projects'), #not need
     path('profile/', views.UserProfileAPIView.as_view(), name='profile'),
     #path('inbox',)
