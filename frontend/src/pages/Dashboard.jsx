@@ -9,13 +9,15 @@ import { getTeams } from "../services/endpoints/teams";
 import { AvatarGen } from "../components/AvatarGen";
 
 export const Dashboard = ({username}) => {
-  const [teamsNumber, setTeamsNumber] = useState(0);
+  const [ownedTeamsNumbers, setOwnedTeamsNumber] = useState(0);
+  const [joinedTeamsNumbers, setJoinedTeamsMembers] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getTeams();
-        setTeamsNumber(response.own.length);
+        setOwnedTeamsNumber(response.own.length);
+        setJoinedTeamsMembers(response.member.length)
       } catch (error) {
         console.error(error);
       } finally {
@@ -36,8 +38,8 @@ export const Dashboard = ({username}) => {
           <p className="text-3xl">Dashboard</p>
         </div>
         <div className="stats flex flex-row justify-evenly max-h-80 h-2/5 mt-5 ">
-          <CardInfo title="Teams" number={teamsNumber} color="cyan" />
-          <CardInfo title="Projects" number="0" color="cyan" />
+          <CardInfo title="Owned Teams" number={ownedTeamsNumbers} color="cyan" />
+          <CardInfo title="Joined teams" number={joinedTeamsNumbers} color="cyan" />
           <HorizontalCard />
         </div>
         <div className="flex flex-col mt-5">

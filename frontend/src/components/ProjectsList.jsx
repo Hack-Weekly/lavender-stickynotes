@@ -6,7 +6,7 @@ export const ProjectsList = ({ teamSlug, projects, setModalIsOpen }) => {
     <>
       {projects.length !== 0 ? (
         <>
-          <div className="grid grid-cols-4 gap-10 items-stretch">
+          <div className="grid grid-cols-3 gap-10 items-stretch">
             {projects.map((project, index) => {
               return (
                 <ProjectCard teamSlug={teamSlug} projectInfo={project} key={index} />

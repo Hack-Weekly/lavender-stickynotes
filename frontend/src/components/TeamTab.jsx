@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs, TabsHeader, TabsBody, Tab, TabPanel, Button } from "@material-tailwind/react";
+import { Tabs, TabsHeader, TabsBody, Tab, TabPanel } from "@material-tailwind/react";
 import { ProjectsList } from "./ProjectsList";
 import { TeamMembers } from "./TeamMembers";
 import { SettingsTeam } from "./SettingsTeam";
