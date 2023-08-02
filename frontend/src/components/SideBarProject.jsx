@@ -20,7 +20,7 @@ export function SideBarProject({ teamSlug, teamData, projectId }) {
   };
   const handleDeleteClick = async() => {
     try{
-     // await deleteProject(teamSlug, projectId);
+     await deleteProject(teamSlug, projectId);
     }catch(error){
       console.error(error);
     }
