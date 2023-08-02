@@ -13,14 +13,14 @@ export const LandingPage = () => {
 
                 <div className="copy lg:p-16 flex w-1/2 flex-col justify-center items-center">
                     <h1 className="text-6xl font-bold text-left leading-normal md:text-center sm:text-center lg:text-left">Organize your notes with ease</h1>
-                    <p className="mt-4 leading-relaxed sm:mt-6">Stick Notes let's you easily organize your notes visually for maximum flexibility and utility. Create groups with family, friends, and all your teams. You can create new projects to keep all notes organized at all times.</p>
+                    <p className="mt-4 leading-relaxed sm:mt-6">Sticky Notes let's you easily organize your notes visually for maximum flexibility and utility. Create groups with family, friends, and all your teams. You can create new projects to keep all notes organized at all times.</p>
                     <Link to="/signup">
                         <button className="signup-btn align-middle font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-full text-white shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none block mt-6 bg-pink-300 sm:mt-8">Sign Up</button>
                     </Link>
                 </div>
 
                 <div className="images p-8 flex flex-col w-1/2 justify-center items-center w-max md:mt-16 sm:mt-24">
-                    <img src={landing} class="rounded-lg border-2 border-pink-100 max-w-xs" alt="screenshot of stick notes UI "></img>
+                    <img src={landing} class="rounded-lg border-2 border-pink-100 max-w-xs" alt="screenshot of sticky notes UI "></img>
                 </div>
 
             </main>
