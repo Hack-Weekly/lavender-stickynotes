@@ -21,6 +21,7 @@ export function SideBarProject({ teamSlug, teamData, projectId }) {
   const handleDeleteClick = async() => {
     try{
      await deleteProject(teamSlug, projectId);
+     navigate("/teams/" + teamSlug);
     }catch(error){
       console.error(error);
     }
